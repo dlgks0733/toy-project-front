@@ -2,6 +2,15 @@
 const path = require('path')
 
 module.exports = {
+    devSever: {
+        proxy: {
+            '^/api': {
+                target: process.env.VUE_APP_BACK_SERVER || 'http://localhost:9000',
+                changeOrigin: true,
+                logLevel: 'debug'
+            }
+        }
+    },
     configureWebpack: {
         resolve: {
             alias: {
