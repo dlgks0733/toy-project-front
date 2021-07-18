@@ -2,7 +2,11 @@ import axios from 'axios'
 
 const instance = axios.create({
     baseURL: process.env.VUE_APP_BACK_SERVER || 'http://localhost:9000',
-    timeout: 6000
+    timeout: 6000,
+    headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json'
+    }
 })
 
 instance.interceptors.request.use(
