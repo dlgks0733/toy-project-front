@@ -14,6 +14,6 @@ module.exports = {
             extensions: ['.vue']
         }
     },
-    transpileDependencies: ['vuex-module-decorators'],
+    transpileDependencies: ['vuex-module-decorators', 'vuetify'],
     runtimeCompiler: true
 }

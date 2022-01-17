@@ -3,14 +3,7 @@ module.exports = {
     env: {
         node: true
     },
-    extends: [
-        'plugin:vue/essential',
-        'eslint:recommended',
-        'plugin:prettier/recommended',
-        '@vue/typescript/recommended',
-        '@vue/prettier',
-        '@vue/prettier/@typescript-eslint'
-    ],
+    extends: ['plugin:vue/essential', 'eslint:recommended', 'plugin:prettier/recommended', '@vue/typescript/recommended', '@vue/prettier', '@vue/prettier/@typescript-eslint'],
     parserOptions: {
         ecmaVersion: 2020
     },
@@ -21,19 +14,20 @@ module.exports = {
         'prettier/prettier': [
             'error',
             {
-                endOfLine: 'auto',
-            },
-        ],
+                endOfLine: 'auto'
+            }
+        ]
     },
-    overrides: [{
-            'files': ['src/services/*.ts'],
-            'rules': {
+    overrides: [
+        {
+            files: ['src/services/*.ts'],
+            rules: {
                 '@typescript-eslint/no-unused-vars': 'off'
             }
         },
         {
-            'files': ['src/services/core/*.ts'],
-            'rules': {
+            files: ['src/services/core/*.ts'],
+            rules: {
                 '@typescript-eslint/no-explicit-any': 'off'
             }
         }
