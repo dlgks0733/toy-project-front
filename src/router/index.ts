@@ -1,15 +1,15 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 
-const Seal = () => import('@/views/seal.vue')
+const Login = () => import('@/views/login/Login.vue')
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
     {
         path: '/',
-        name: 'Seal',
-        component: Seal
+        name: 'Login',
+        component: Login
     }
 ]
 

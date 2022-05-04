@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const instance = axios.create({
-    baseURL: process.env.VUE_APP_BACK_SERVER || 'http://localhost:9000',
+    baseURL: process.env.VUE_APP_FRONT_SERVER || 'http://localhost:3000',
     timeout: 6000,
     headers: {
         'Access-Control-Allow-Origin': '*',
@@ -11,22 +11,18 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
     function (config) {
-        // 필요 시 코드 추가
         return config
     },
     function (error) {
-        // 필요 시 코드 추가
         return Promise.reject(error)
     }
 )
 
 instance.interceptors.response.use(
     function (response) {
-        // 필요 시 코드 추가
-        return response
+        return response.data
     },
     function (error) {
-        // 필요 시 코드 추가
         return error
     }
 )
