@@ -1,15 +1,31 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 
+import Layout from '@/components/Layout/Layout.vue'
+
 const Login = () => import('@/views/login/Login.vue')
+const Dashboard = () => import('@/views/dashboard/Dashboard.vue')
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
     {
-        path: '/',
+        path: '/login',
         name: 'Login',
         component: Login
+    },
+    {
+        path: '/',
+        redirect: 'login',
+        name: 'Layout',
+        component: Layout,
+        children: [
+            {
+                path: 'dashboard',
+                name: 'Dashboard',
+                component: Dashboard
+            }
+        ]
     }
 ]
 

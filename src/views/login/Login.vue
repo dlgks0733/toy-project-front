@@ -23,7 +23,7 @@
                                                     <v-form>
                                                         <v-col>
                                                             <v-text-field v-model="adId" :rules="adIdRules" label="ID" required></v-text-field>
-                                                            <v-text-field v-model="adPwd" :rules="adPwdRules" type="password" label="Password" hint="At least 6 characters" required></v-text-field>
+                                                            <v-text-field v-model="adPwd" :rules="adPwdRules" type="password" label="Password" hint="At least 6 characters" required @keydown.enter="login"></v-text-field>
                                                         </v-col>
                                                         <v-col class="d-flex justify-space-between">
                                                             <v-btn class="text-capitalize" large :disabled="adId.length === 0 || adPwd.length === 0" color="primary" @click="login"> Login</v-btn>
@@ -61,10 +61,20 @@ export default class Login extends Vue {
     adPwd = ''
     adPwdRules = [(v: string): string | boolean => !!v || 'Password is required', (v: string): string | boolean => v.length >= 6 || 'Min 6 characters']
 
+    created(): void {
+        if (localStorage.getItem('JWT')) {
+            this.$router.push('/dashboard')
+        }
+    }
+
     async login(): Promise<void> {
         const tokenDTO: TokenDTO = await new AuthService().login({ adId: this.adId, adPwd: this.adPwd })
-        console.log('tokenDTO', tokenDTO)
-        // TODO: localstorage, axios request interceptor 설정
+        if (tokenDTO.token) {
+            localStorage.setItem('JWT', tokenDTO.token)
+            this.$router.push('/dashboard')
+        } else {
+            this.$toast.error('아이디 또는 비밀번호를 잘못 입력했습니다.')
+        }
     }
 }
 </script>
