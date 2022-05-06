@@ -12,7 +12,7 @@
                                         <v-text-field label="ID"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="4" md="6">
-                                        <v-text-field label="패스워드"></v-text-field>
+                                        <v-text-field type="password" label="패스워드"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="4" md="6">
                                         <v-text-field label="이름"></v-text-field>

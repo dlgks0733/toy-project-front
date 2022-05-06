@@ -1,5 +1,5 @@
 <template>
-    <v-data-table :headers="headers" :items="items" sort-by="calories" class="elevation-1">
+    <v-data-table :headers="headers" :items="items" class="elevation-1">
         <template v-slot:top>
             <v-toolbar flat>
                 <v-toolbar-title>{{ title }}</v-toolbar-title>
@@ -45,7 +45,7 @@
     </v-data-table>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 /**
  * CRUD 기능 Data Table
  * @Prop headers: 테이블 열 명칭
@@ -70,11 +70,6 @@ export default class CrudDataTable extends Vue {
         return this.editedIndex === -1 ? '신규 등록' : '수정'
     }
 
-    @Watch('dialog')
-    watchDialog(val: boolean): void {
-        val || this.close()
-    }
-
     close(): void {
         this.dialog = false
         this.$nextTick(() => {
@@ -82,6 +77,7 @@ export default class CrudDataTable extends Vue {
             this.editedIndex = -1
         })
     }
+
     editItem(item: Object): void {
         this.editedIndex = 0
         console.log('item', item)
