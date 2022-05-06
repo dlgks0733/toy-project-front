@@ -5,6 +5,7 @@ import Layout from '@/components/Layout/Layout.vue'
 
 const Login = () => import('@/views/login/Login.vue')
 const Dashboard = () => import('@/views/dashboard/Dashboard.vue')
+const Admin = () => import('@/views/admin/Admin.vue')
 
 Vue.use(VueRouter)
 
@@ -24,6 +25,11 @@ const routes: Array<RouteConfig> = [
                 path: 'dashboard',
                 name: 'Dashboard',
                 component: Dashboard
+            },
+            {
+                path: 'admin',
+                name: 'Admin',
+                component: Admin
             }
         ]
     }

@@ -71,7 +71,7 @@ export default class Sidebar extends Vue {
     @Prop({ type: Boolean }) drawer!: boolean
     items = [
         { title: 'Dashboard', icon: 'mdi-home', link: '/dashboard' },
-        { title: 'Typography', icon: 'mdi-format-size', link: '/typography' },
+        { title: 'Admin', icon: 'mdi-format-size', link: '/admin' },
         { title: 'Tables', icon: 'mdi-grid-large', link: '/tables' },
         { title: 'Notifications', icon: 'mdi-bell-outline', link: '/notifications' },
         {

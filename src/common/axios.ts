@@ -11,6 +11,11 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
     function (config) {
+        let token
+        if (!token) {
+            token = localStorage.getItem('JWT')
+        }
+        config.headers.Authorization = 'Bearer ' + token
         return config
     },
     function (error) {
