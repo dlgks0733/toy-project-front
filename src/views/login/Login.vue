@@ -52,7 +52,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import AuthService from '@/service/auth/auth'
-import { TokenDTO } from '@/service/auth/auth'
+import { TokenDTO, setLocalStorage, getLocalStorage } from '@/service/auth/auth'
 
 @Component
 export default class Login extends Vue {
@@ -62,7 +62,8 @@ export default class Login extends Vue {
     adPwdRules = [(v: string): string | boolean => !!v || 'Password is required', (v: string): string | boolean => v.length >= 6 || 'Min 6 characters']
 
     created(): void {
-        if (localStorage.getItem('JWT')) {
+        const tokenDto = getLocalStorage()
+        if (tokenDto.token) {
             this.$router.push('/dashboard')
         }
     }
@@ -70,7 +71,7 @@ export default class Login extends Vue {
     async login(): Promise<void> {
         const tokenDTO: TokenDTO = await new AuthService().login({ adId: this.adId, adPwd: this.adPwd })
         if (tokenDTO.token) {
-            localStorage.setItem('JWT', tokenDTO.token)
+            setLocalStorage(tokenDTO.token, tokenDTO.adId)
             this.$router.push('/dashboard')
         } else {
             this.$toast.error('아이디 또는 비밀번호를 잘못 입력했습니다.')

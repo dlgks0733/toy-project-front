@@ -74,7 +74,7 @@
                 </v-btn>
             </template>
             <v-list>
-                <div class="text-h5 grey--text text--darken-3 px-4 pt-4">John Smith</div>
+                <div class="text-h5 grey--text text--darken-3 px-4 pt-4">{{ id }}</div>
                 <div class="subtitle-2 primary--text font-weight-regular px-4">Flatlogic.com</div>
                 <v-list-item-group color="primary">
                     <v-list-item v-for="(item, i) in account" :key="i">
@@ -98,6 +98,7 @@
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 import config from '@/styles/config'
 import Search from '@/components/Search/Search.vue'
+import { removeLocalStorage, getLocalStorage } from '@/service/auth/auth'
 
 @Component({
     components: {
@@ -128,13 +129,18 @@ export default class Header extends Vue {
     notificationsBadge = true
     messageBadge = true
 
+    get id(): string {
+        const tokenDto = getLocalStorage()
+        return tokenDto.adId
+    }
+
     @Emit()
     changeDrawerState(): boolean {
         return !this.drawer
     }
 
     logOut(): void {
-        localStorage.removeItem('JWT')
+        removeLocalStorage()
         this.$router.push('/login')
     }
 }

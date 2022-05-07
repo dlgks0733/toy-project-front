@@ -20,7 +20,7 @@
                         <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn color="blue darken-1" text @click="close"> 취소 </v-btn>
-                            <v-btn color="blue darken-1" text> 저장 </v-btn>
+                            <v-btn color="blue darken-1" text @click="create"> 저장 </v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
@@ -45,7 +45,7 @@
     </v-data-table>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
 /**
  * CRUD 기능 Data Table
  * @Prop headers: 테이블 열 명칭
@@ -53,7 +53,9 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
  * @Prop title: 테이블 상단 명칭
  * @Prop isModFunc: 행 데이터 수정기능 여부
  * @Prop isDelFunc: 행 데이터 삭제기능 여부
- * @Slot form 등록 및 수정 폼
+ * @Slot form: 등록 및 수정 폼
+ * @Emit create: 부모의 create 함수 실행 (등록 기능)
+ * @Emit reset: 부모의 reset 함수 실행 (필드 초기화)
  */
 @Component
 export default class CrudDataTable extends Vue {
@@ -70,10 +72,23 @@ export default class CrudDataTable extends Vue {
         return this.editedIndex === -1 ? '신규 등록' : '수정'
     }
 
+    // 상위컴포넌트 create Emit 함수
+    @Emit()
+    create(): null {
+        this.close()
+        return null
+    }
+
+    // 상위컴포넌트 reset Emit 함수
+    @Emit()
+    reset(): null {
+        return null
+    }
+
     close(): void {
         this.dialog = false
         this.$nextTick(() => {
-            // TODO: slot field 초기화
+            this.reset()
             this.editedIndex = -1
         })
     }
