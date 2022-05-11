@@ -46,6 +46,7 @@ import AdminService from '@/service/admin/admin'
 import { AdminListDTO, AdminCreateDTO } from '@/service/admin/admin'
 import { YesOrNo } from '@/service/constant/commonEnums'
 import { getLocalStorage } from '@/service/auth/auth'
+import { Size } from '@/common/validation'
 
 @Component({
     components: {
@@ -70,6 +71,7 @@ export default class Admin extends Vue {
 
     items: AdminListDTO[] = []
 
+    @Size(1, 6)
     adId = ''
     adPwd = ''
     adName = ''

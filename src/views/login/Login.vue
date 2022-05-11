@@ -53,11 +53,15 @@
 import { Component, Vue } from 'vue-property-decorator'
 import AuthService from '@/service/auth/auth'
 import { TokenDTO, setLocalStorage, getLocalStorage } from '@/service/auth/auth'
+import { Size } from '@/common/validation'
 
 @Component
 export default class Login extends Vue {
+    @Size(1, 6)
     adId = ''
-    adIdRules = [(v: string): string | boolean => !!v || 'Password is required', (v: string): string | boolean => v.length >= 6 || 'Min 6 characters']
+    adIdRules = [(v: string): string | boolean => !!v || 'Password is required']
+
+    @Size(1, 6)
     adPwd = ''
     adPwdRules = [(v: string): string | boolean => !!v || 'Password is required', (v: string): string | boolean => v.length >= 6 || 'Min 6 characters']
 
