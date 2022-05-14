@@ -57,11 +57,11 @@ import { Size } from '@/common/validation'
 
 @Component
 export default class Login extends Vue {
-    @Size(1, 6)
+    @Size(6, 100)
     adId = ''
     adIdRules = [(v: string): string | boolean => !!v || 'Password is required']
 
-    @Size(1, 6)
+    @Size(6, 100)
     adPwd = ''
     adPwdRules = [(v: string): string | boolean => !!v || 'Password is required', (v: string): string | boolean => v.length >= 6 || 'Min 6 characters']
 

@@ -3,23 +3,53 @@ import 'reflect-metadata'
 
 const validationsKey = Symbol('validationsKey')
 
+// TODO: 유효하지 않을 때, ErrMsg 표시
+
 /**
  * @param min 최소 길이
  * @param max 최대 길이
  */
 export function Size(min: number, max: number): VueDecorator {
-    return createDecorator((options: any, key) => {
+    return createDecorator((options, key) => {
         let validtions = Reflect.getMetadata(validationsKey, options)
         if (!validtions) {
-            // 메타데이터에 값이 없으면 초기화
             validtions = {}
         }
-        // 비공백 문자 수 제한 정규식
         validtions[key] = new RegExp(`^\\s*(?:\\S\\s*){${min},${max}}$`)
         Reflect.defineMetadata(validationsKey, validtions, options)
-        console.log(options)
-        console.log('validationsKey', Reflect.getMetadata(validationsKey, options))
+        createValidator(options)
     })
 }
 
-// TODO: property의 실시간 변경 감지 or 컴포넌트 훅을 이용해서 결과 리턴
+// methods 객체에 validator 등록
+function createValidator(options: any) {
+    const metadata = Reflect.getMetadata(validationsKey, options)
+    const keys = Object.keys(metadata)
+    const currentKey = keys[keys.length - 1]
+    options.methods[`${currentKey}Validator`] = function validator(value: any) {
+        const regExp = metadata[currentKey]
+        if (!regExp.test(value)) {
+            console.log('잘못된 값')
+        }
+    }
+    createWatch(options)
+}
+
+// watch 등록
+function createWatch(options: any) {
+    const metadata = Reflect.getMetadata(validationsKey, options)
+    const keys = Object.keys(metadata)
+    const currentKey = keys[keys.length - 1]
+    if (!options.watch) {
+        options.watch = {}
+    }
+    options.watch[currentKey] = [
+        {
+            handler: `${currentKey}Validator`,
+            deep: false,
+            immediate: false,
+            user: true
+        }
+    ]
+    console.log(options)
+}
