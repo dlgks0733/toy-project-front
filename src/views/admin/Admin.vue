@@ -5,29 +5,29 @@
             <v-row>
                 <v-col cols="12">
                     <v-card class="employee-list mb-1">
-                        <crud-data-table title="Admin List" :headers="headers" :items="items" :isModFunc="true" :isDelFunc="false" @create="createAdmin" @reset="reset">
+                        <crud-data-table title="Admin List" :headers="headers" :items="items" :isModFunc="true" :isDelFunc="false" @create="createAdmin" @reset="resetFields" :isBtnDisabled="disabledCreateBtn">
                             <template v-slot:form>
                                 <v-row>
                                     <v-col cols="12" sm="4" md="6">
-                                        <v-text-field v-model="adId" label="ID"></v-text-field>
+                                        <v-text-field v-model="adId" :rules="adIdRules" label="ID"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="4" md="6">
-                                        <v-text-field v-model="adPwd" type="password" label="패스워드"></v-text-field>
+                                        <v-text-field v-model="adPwd" :rules="adPwdRules" type="password" label="패스워드"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="4" md="6">
-                                        <v-text-field v-model="adName" label="이름"></v-text-field>
+                                        <v-text-field v-model="adName" :rules="adNameRules" label="이름"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="4" md="6">
-                                        <v-text-field v-model="adDept" label="부서"></v-text-field>
+                                        <v-text-field v-model="adDept" :rules="adDeptRules" label="부서"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="4" md="6">
-                                        <v-text-field v-model="adEmail" label="이메일"></v-text-field>
+                                        <v-text-field v-model="adEmail" :rules="adEmailRules" label="이메일"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="4" md="6">
-                                        <v-text-field v-model="adPhone" label="휴대전화"></v-text-field>
+                                        <v-text-field v-model="adPhone" :rules="adPhoneRules" label="휴대전화"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="4" md="6">
-                                        <v-text-field v-model="adTel" label="유선전화"></v-text-field>
+                                        <v-text-field v-model="adTel" :rules="adTelRules" label="유선전화"></v-text-field>
                                     </v-col>
                                 </v-row>
                             </template>
@@ -46,7 +46,8 @@ import AdminService from '@/service/admin/admin'
 import { AdminListDTO, AdminCreateDTO } from '@/service/admin/admin'
 import { YesOrNo } from '@/service/constant/commonEnums'
 import { getLocalStorage } from '@/service/auth/auth'
-import { Size } from '@/common/validation'
+import { Email, Phone, Size, Tel } from '@/common/validation'
+import { isEmpty } from 'underscore'
 
 @Component({
     components: {
@@ -54,9 +55,6 @@ import { Size } from '@/common/validation'
     }
 })
 export default class Admin extends Vue {
-    // TODO: validate 추가
-    valid = true
-
     headers: Array<Object> = [
         {
             text: 'ID',
@@ -71,17 +69,53 @@ export default class Admin extends Vue {
 
     items: AdminListDTO[] = []
 
-    @Size(1, 6)
+    @Size(6, 100, '최소 6자 이상 최대 100자 이하 문자를 입력해주세요.')
     adId = ''
+    adIdRules = []
+
+    @Size(6, 100, '최소 6자 이상 최대 100자 이하 문자를 입력해주세요.')
     adPwd = ''
+    adPwdRules = []
+
+    @Size(2, 25, '최소 2자 이상 최대 25자 이하 문자를 입력해주세요.')
     adName = ''
+    adNameRules = []
+
+    @Size(2, 20, '최소 2자 이상 최대 20자 이하 문자를 입력해주세요.')
     adDept = ''
+    adDeptRules = []
+
+    @Email()
     adEmail = ''
+    adEmailRules = []
+
+    @Phone()
     adPhone = ''
+    adPhoneRules = []
+
+    @Tel()
     adTel = ''
+    adTelRules = []
 
     mounted(): void {
         this.requestAdminList()
+    }
+
+    get disabledCreateBtn(): boolean {
+        return (
+            isEmpty(this.adId) ||
+            isEmpty(this.adPwd) ||
+            isEmpty(this.adName) ||
+            isEmpty(this.adDept) ||
+            isEmpty(this.adEmail) ||
+            isEmpty(this.adPhone) ||
+            !isEmpty(this.adIdRules) ||
+            !isEmpty(this.adPwdRules) ||
+            !isEmpty(this.adNameRules) ||
+            !isEmpty(this.adDeptRules) ||
+            !isEmpty(this.adEmailRules) ||
+            !isEmpty(this.adPhoneRules)
+        )
     }
 
     async requestAdminList(): Promise<void> {
@@ -95,9 +129,9 @@ export default class Admin extends Vue {
             adPwd: this.adPwd,
             adName: this.adName,
             adDept: this.adDept,
-            adPhone: this.adPhone,
+            adPhone: this.adPhone.replace(/[^0-9]/g, ''),
             adEmail: this.adEmail,
-            adTel: this.adTel,
+            adTel: this.adTel.replace(/[^0-9]/g, ''),
             adUseYn: YesOrNo.N,
             regId: tokenDto.adId,
             chgId: tokenDto.adId
@@ -107,7 +141,7 @@ export default class Admin extends Vue {
         this.requestAdminList()
     }
 
-    reset(): void {
+    resetFields(): void {
         this.adId = ''
         this.adPwd = ''
         this.adName = ''

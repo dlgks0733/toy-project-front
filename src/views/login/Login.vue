@@ -23,10 +23,10 @@
                                                     <v-form>
                                                         <v-col>
                                                             <v-text-field v-model="adId" :rules="adIdRules" label="ID" required></v-text-field>
-                                                            <v-text-field v-model="adPwd" :rules="adPwdRules" type="password" label="Password" hint="At least 6 characters" required @keydown.enter="login"></v-text-field>
+                                                            <v-text-field v-model="adPwd" :rules="adPwdRules" type="password" label="Password" required @keydown.enter="login"></v-text-field>
                                                         </v-col>
                                                         <v-col class="d-flex justify-space-between">
-                                                            <v-btn class="text-capitalize" large :disabled="adId.length === 0 || adPwd.length === 0" color="primary" @click="login"> Login</v-btn>
+                                                            <v-btn class="text-capitalize" large :disabled="disabledLoginBtn" color="primary" @click="login"> Login</v-btn>
                                                             <v-btn large text class="text-capitalize primary--text">Forget Password</v-btn>
                                                         </v-col>
                                                     </v-form>
@@ -54,22 +54,27 @@ import { Component, Vue } from 'vue-property-decorator'
 import AuthService from '@/service/auth/auth'
 import { TokenDTO, setLocalStorage, getLocalStorage } from '@/service/auth/auth'
 import { Size } from '@/common/validation'
+import { isEmpty } from 'underscore'
 
 @Component
 export default class Login extends Vue {
-    @Size(6, 100)
+    @Size(6, 100, '최소 6자 이상 최대 100자 이하 문자를 입력해주세요.')
     adId = ''
-    adIdRules = [(v: string): string | boolean => !!v || 'Password is required']
+    adIdRules = []
 
-    @Size(6, 100)
+    @Size(6, 100, '최소 6자 이상 최대 100자 이하 문자를 입력해주세요.')
     adPwd = ''
-    adPwdRules = [(v: string): string | boolean => !!v || 'Password is required', (v: string): string | boolean => v.length >= 6 || 'Min 6 characters']
+    adPwdRules = []
 
     created(): void {
         const tokenDto = getLocalStorage()
         if (tokenDto.token) {
             this.$router.push('/dashboard')
         }
+    }
+
+    get disabledLoginBtn(): boolean {
+        return isEmpty(this.adId) || isEmpty(this.adPwd) || !isEmpty(this.adIdRules) || !isEmpty(this.adPwdRules)
     }
 
     async login(): Promise<void> {

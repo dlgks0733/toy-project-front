@@ -20,7 +20,7 @@
                         <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn color="blue darken-1" text @click="close"> 취소 </v-btn>
-                            <v-btn color="blue darken-1" text @click="create"> 저장 </v-btn>
+                            <v-btn color="blue darken-1" text @click="create" :disabled="isBtnDisabled"> 저장 </v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
@@ -64,6 +64,7 @@ export default class CrudDataTable extends Vue {
     @Prop({ type: String, required: true }) title!: string
     @Prop({ type: Boolean, required: true }) isModFunc!: boolean
     @Prop({ type: Boolean, required: true }) isDelFunc!: boolean
+    @Prop({ type: Boolean, required: true }) isBtnDisabled!: boolean
     dialog = false
     dialogDelete = false
     editedIndex = -1

@@ -5,7 +5,7 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "module": "esnext",
-        "types": ["webpack-env"],
+        "types": ["webpack-env", "underscore"],
         "paths": {
             "@/*": ["src/*"],
             "@components/*": ["src/components/*"],

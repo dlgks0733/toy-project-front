@@ -3,19 +3,17 @@ import 'reflect-metadata'
 
 const validationsKey = Symbol('validationsKey')
 
-// TODO: 유효하지 않을 때, ErrMsg 표시
-
-/**
- * @param min 최소 길이
- * @param max 최대 길이
- */
-export function Size(min: number, max: number): VueDecorator {
+// decorator 생성
+function createCustomDecorator(regExp: RegExp, errMsg: string): VueDecorator {
     return createDecorator((options, key) => {
         let validtions = Reflect.getMetadata(validationsKey, options)
         if (!validtions) {
             validtions = {}
         }
-        validtions[key] = new RegExp(`^\\s*(?:\\S\\s*){${min},${max}}$`)
+        validtions[key] = {
+            regExp: regExp,
+            errMsg: errMsg
+        }
         Reflect.defineMetadata(validationsKey, validtions, options)
         createValidator(options)
     })
@@ -27,9 +25,11 @@ function createValidator(options: any) {
     const keys = Object.keys(metadata)
     const currentKey = keys[keys.length - 1]
     options.methods[`${currentKey}Validator`] = function validator(value: any) {
-        const regExp = metadata[currentKey]
-        if (!regExp.test(value)) {
-            console.log('잘못된 값')
+        const validtions = metadata[currentKey]
+        if (!validtions.regExp.test(value) && value) {
+            this.$data[`${currentKey}Rules`].push(false || validtions.errMsg)
+        } else {
+            this.$data[`${currentKey}Rules`] = []
         }
     }
     createWatch(options)
@@ -51,5 +51,34 @@ function createWatch(options: any) {
             user: true
         }
     ]
-    console.log(options)
+}
+
+/**
+ * @param min 최소 길이
+ * @param max 최대 길이
+ * @param errMsg 에러 메세지
+ */
+export function Size(min: number, max: number, errMsg: string): VueDecorator {
+    return createCustomDecorator(new RegExp(`^\\s*(?:\\S\\s*){${min},${max}}$`), errMsg)
+}
+
+/**
+ * @param errMsg 에러 메세지 (default: '이메일 형식에 맞지 않습니다.')
+ */
+export function Email(errMsg = '이메일 형식에 맞지 않습니다.'): VueDecorator {
+    return createCustomDecorator(new RegExp('^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}$'), errMsg)
+}
+
+/**
+ * @param errMsg 에러 메세지 (default: '휴대전화 형식에 맞지 않습니다.')
+ */
+export function Phone(errMsg = '휴대전화 형식에 맞지 않습니다.'): VueDecorator {
+    return createCustomDecorator(new RegExp('^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$'), errMsg)
+}
+
+/**
+ * @param errMsg 에러 메세지 (default: '유선전화 형식에 맞지 않습니다.')
+ */
+export function Tel(errMsg = '유선전화 형식에 맞지 않습니다.'): VueDecorator {
+    return createCustomDecorator(new RegExp('^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))-?(\\d{3,4})-?(\\d{4})$'), errMsg)
 }
