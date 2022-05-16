@@ -58,11 +58,11 @@ import { isEmpty } from 'underscore'
 
 @Component
 export default class Login extends Vue {
-    @Size(6, 100, '최소 6자 이상 최대 100자 이하 문자를 입력해주세요.')
+    @Size(6, 100)
     adId = ''
     adIdRules = []
 
-    @Size(6, 100, '최소 6자 이상 최대 100자 이하 문자를 입력해주세요.')
+    @Size(6, 100)
     adPwd = ''
     adPwdRules = []
 

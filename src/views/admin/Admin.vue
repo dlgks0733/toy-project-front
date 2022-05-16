@@ -69,19 +69,19 @@ export default class Admin extends Vue {
 
     items: AdminListDTO[] = []
 
-    @Size(6, 100, '최소 6자 이상 최대 100자 이하 문자를 입력해주세요.')
+    @Size(6, 100)
     adId = ''
     adIdRules = []
 
-    @Size(6, 100, '최소 6자 이상 최대 100자 이하 문자를 입력해주세요.')
+    @Size(6, 100)
     adPwd = ''
     adPwdRules = []
 
-    @Size(2, 25, '최소 2자 이상 최대 25자 이하 문자를 입력해주세요.')
+    @Size(2, 25)
     adName = ''
     adNameRules = []
 
-    @Size(2, 20, '최소 2자 이상 최대 20자 이하 문자를 입력해주세요.')
+    @Size(2, 20)
     adDept = ''
     adDeptRules = []
 
