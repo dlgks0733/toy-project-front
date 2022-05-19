@@ -180,7 +180,7 @@ export default class Admin extends Vue {
 
     setInfo(item: object) {
         this.item = item as AdminInfoDTO
-        //TODO: return Promise<boolean>
+        //TODO: return promise<boolean>
     }
 }
 </script>
