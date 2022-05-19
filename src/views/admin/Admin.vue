@@ -5,8 +5,33 @@
             <v-row>
                 <v-col cols="12">
                     <v-card class="employee-list mb-1">
-                        <crud-data-table title="Admin List" :headers="headers" :items="items" :isModFunc="true" :isDelFunc="false" @create="createAdmin" @reset="resetFields" :isBtnDisabled="disabledCreateBtn">
+                        <crud-data-table title="Admin List" :headers="headers" :items="items" :is-mod-func="true" :is-del-func="false" :is-btn-disabled="disabledCreateBtn" @create="createAdmin" @reset="resetFields" @set-info="setInfo">
                             <template v-slot:form>
+                                <v-row>
+                                    <v-col cols="12" sm="4" md="6">
+                                        <v-text-field v-model="adId" :rules="adIdRules" label="ID"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="4" md="6">
+                                        <v-text-field v-model="adPwd" :rules="adPwdRules" type="password" label="패스워드"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="4" md="6">
+                                        <v-text-field v-model="adName" :rules="adNameRules" label="이름"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="4" md="6">
+                                        <v-text-field v-model="adDept" :rules="adDeptRules" label="부서"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="4" md="6">
+                                        <v-text-field v-model="adEmail" :rules="adEmailRules" label="이메일"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="4" md="6">
+                                        <v-text-field v-model="adPhone" :rules="adPhoneRules" label="휴대전화"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="4" md="6">
+                                        <v-text-field v-model="adTel" :rules="adTelRules" label="유선전화"></v-text-field>
+                                    </v-col>
+                                </v-row>
+                            </template>
+                            <template v-slot:info>
                                 <v-row>
                                     <v-col cols="12" sm="4" md="6">
                                         <v-text-field v-model="adId" :rules="adIdRules" label="ID"></v-text-field>
@@ -42,7 +67,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import CrudDataTable from '@/components/DataTable/CrudDataTable.vue'
-import AdminService from '@/service/admin/admin'
+import AdminService, { AdminInfoDTO } from '@/service/admin/admin'
 import { AdminListDTO, AdminCreateDTO } from '@/service/admin/admin'
 import { YesOrNo } from '@/service/constant/commonEnums'
 import { getLocalStorage } from '@/service/auth/auth'
@@ -67,7 +92,9 @@ export default class Admin extends Vue {
         { text: 'Actions', value: 'actions', sortable: false }
     ]
 
-    items: AdminListDTO[] = []
+    items: AdminInfoDTO[] = []
+
+    item!: AdminInfoDTO
 
     @Size(6, 100)
     adId = ''
@@ -149,6 +176,11 @@ export default class Admin extends Vue {
         this.adEmail = ''
         this.adPhone = ''
         this.adTel = ''
+    }
+
+    setInfo(item: object) {
+        this.item = item as AdminInfoDTO
+        //TODO: return Promise<boolean>
     }
 }
 </script>

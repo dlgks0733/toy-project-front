@@ -1,7 +1,7 @@
 <template>
     <v-app-bar class="main-header" height="64" fixed color="primary" dark>
         <v-btn icon class="mx-1" @click.stop="changeDrawerState">
-            <template v-if="drawer">
+            <template v-if="drawerProp">
                 <v-icon style="font-size: 28px">mdi-arrow-left</v-icon>
             </template>
             <template v-else>
@@ -95,7 +95,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
+import { Component, Emit, Prop, PropSync, Vue } from 'vue-property-decorator'
 import config from '@/styles/config'
 import Search from '@/components/Search/Search.vue'
 import { removeLocalStorage, getLocalStorage } from '@/service/auth/auth'
@@ -106,7 +106,7 @@ import { removeLocalStorage, getLocalStorage } from '@/service/auth/auth'
     }
 })
 export default class Header extends Vue {
-    @Prop({ type: Boolean }) drawer!: boolean
+    @PropSync('drawer', { type: Boolean }) drawerProp!: boolean
     config = config
     searchCollapse = true
     notifications = [
@@ -134,14 +134,13 @@ export default class Header extends Vue {
         return tokenDto.adId
     }
 
-    @Emit()
-    changeDrawerState(): boolean {
-        return !this.drawer
-    }
-
     logOut(): void {
         removeLocalStorage()
         this.$router.push('/login')
+    }
+
+    changeDrawerState(): void {
+        this.drawerProp = !this.drawerProp
     }
 }
 </script>

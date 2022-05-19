@@ -2,13 +2,13 @@
     <v-navigation-drawer
         app
         clipped
-        v-model="drawer"
-        :mini-variant="!drawer"
+        v-model="drawerProp"
+        :mini-variant="!drawerProp"
         :width="sidebarWidth"
         :permanent="$vuetify.breakpoint.mdAndUp"
         :temporary="$vuetify.breakpoint.smAndDown"
         :mini-variant-width="sidebarMinWidth"
-        :class="{ 'drawer-mini': !drawer }"
+        :class="{ 'drawer-mini': !drawerProp }"
     >
         <div class="v-list">
             <a class="v-list-item v-list-item--link grey--text text-sm-h6" target="_blank" href="https://flatlogic.com/generator">Generate App</a>
@@ -25,7 +25,7 @@
                     <v-col cols="6" class="text-center"> </v-col>
                 </v-row>
                 <v-divider v-else-if="item.divider" :key="i" dark class="my-4"></v-divider>
-                <v-list-group color="primary" v-else-if="item.children && drawer" :key="item.title" v-model="item.model" append-icon="">
+                <v-list-group color="primary" v-else-if="item.children && drawerProp" :key="item.title" v-model="item.model" append-icon="">
                     <template v-slot:prependIcon>
                         <v-icon size="28">mdi-image-filter-none</v-icon>
                     </template>
@@ -63,12 +63,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, PropSync, Vue } from 'vue-property-decorator'
 
 @Component
 export default class Sidebar extends Vue {
     @Prop({ type: String }) source!: string
-    @Prop({ type: Boolean }) drawer!: boolean
+    @PropSync('drawer', { type: Boolean }) drawerProp!: boolean
     items = [
         { title: 'Dashboard', icon: 'mdi-home', link: '/dashboard' },
         { title: 'Admin', icon: 'mdi-format-size', link: '/admin' },

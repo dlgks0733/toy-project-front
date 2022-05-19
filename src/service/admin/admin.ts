@@ -43,7 +43,7 @@ export interface AdminInfoDTO {
 }
 
 export default class Admin {
-    async getList(): Promise<AdminListDTO[]> {
+    async getList(): Promise<AdminInfoDTO[]> {
         return axios.get(`${URL.ADMIN}`)
     }
 

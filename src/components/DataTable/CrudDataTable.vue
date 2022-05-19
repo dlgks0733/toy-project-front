@@ -1,10 +1,10 @@
 <template>
-    <v-data-table :headers="headers" :items="items" class="elevation-1">
+    <v-data-table :headers="headers" :items="items" class="elevation-1" @click:row="onInfoDialog">
         <template v-slot:top>
             <v-toolbar flat>
                 <v-toolbar-title>{{ title }}</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-dialog v-model="dialog" max-width="500px">
+                <v-dialog v-model="formDialog" max-width="500px" @click:outside="close" @keydown.esc="close">
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on"> 신규 등록 </v-btn>
                     </template>
@@ -24,7 +24,19 @@
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
-                <v-dialog v-model="dialogDelete" max-width="500px">
+                <v-dialog v-model="infoDialog" max-width="500px" @click:outside="close" @keydown.esc="close">
+                    <v-card>
+                        <v-card-title>
+                            <span class="text-h5">관리자 정보</span>
+                        </v-card-title>
+                        <v-card-text>
+                            <v-container>
+                                <slot name="info"> </slot>
+                            </v-container>
+                        </v-card-text>
+                    </v-card>
+                </v-dialog>
+                <v-dialog v-model="confirmDialog" max-width="500px">
                     <v-card>
                         <v-card-title class="text-h5">삭제하시겠습니까?</v-card-title>
                         <v-card-actions>
@@ -65,8 +77,9 @@ export default class CrudDataTable extends Vue {
     @Prop({ type: Boolean, required: true }) isModFunc!: boolean
     @Prop({ type: Boolean, required: true }) isDelFunc!: boolean
     @Prop({ type: Boolean, required: true }) isBtnDisabled!: boolean
-    dialog = false
-    dialogDelete = false
+    formDialog = false
+    confirmDialog = false
+    infoDialog = false
     editedIndex = -1
 
     get formTitle(): string {
@@ -87,18 +100,27 @@ export default class CrudDataTable extends Vue {
     }
 
     close(): void {
-        this.dialog = false
-        this.$nextTick(() => {
-            this.reset()
-            this.editedIndex = -1
-        })
+        // 등록/수정 Dialog 열려있을 경우
+        if (this.formDialog) {
+            this.formDialog = false
+            this.$nextTick(() => {
+                this.reset()
+                this.editedIndex = -1
+            })
+        } else {
+            this.infoDialog = false
+        }
     }
 
     editItem(item: Object): void {
         this.editedIndex = 0
         console.log('item', item)
         // this.editedItem = Object.assign({}, item)
-        this.dialog = true
+        this.formDialog = true
+    }
+
+    onInfoDialog(): void {
+        this.infoDialog = true
     }
 }
 </script>

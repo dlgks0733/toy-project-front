@@ -22,7 +22,7 @@
                                                 <v-row class="flex-column">
                                                     <v-form>
                                                         <v-col>
-                                                            <v-text-field v-model="adId" :rules="adIdRules" label="ID" required></v-text-field>
+                                                            <v-text-field v-model="adId" :rules="adIdRules" label="ID" required @keydown.enter="login"></v-text-field>
                                                             <v-text-field v-model="adPwd" :rules="adPwdRules" type="password" label="Password" required @keydown.enter="login"></v-text-field>
                                                         </v-col>
                                                         <v-col class="d-flex justify-space-between">
@@ -77,7 +77,11 @@ export default class Login extends Vue {
         return isEmpty(this.adId) || isEmpty(this.adPwd) || !isEmpty(this.adIdRules) || !isEmpty(this.adPwdRules)
     }
 
-    async login(): Promise<void> {
+    async login(): Promise<void | boolean> {
+        if (this.disabledLoginBtn) {
+            this.$toast.error('아이디 또는 비밀번호를 확인해주세요.')
+            return false
+        }
         const tokenDTO: TokenDTO = await new AuthService().login({ adId: this.adId, adPwd: this.adPwd })
         if (tokenDTO.token) {
             setLocalStorage(tokenDTO.token, tokenDTO.adId)

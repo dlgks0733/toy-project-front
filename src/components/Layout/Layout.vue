@@ -1,7 +1,7 @@
 <template>
     <v-app class="pa-6">
-        <Header :drawer="drawer" @change-drawer-state="changeDrawerState" />
-        <Sidebar :drawer="drawer" />
+        <Header :drawer.sync="drawer" />
+        <Sidebar :drawer.sync="drawer" />
         <v-main class="content">
             <router-view />
             <Footer />
@@ -25,10 +25,6 @@ import './Layout.scss'
 })
 export default class Layout extends Vue {
     drawer = true
-
-    changeDrawerState(state: boolean): void {
-        this.drawer = state
-    }
 }
 </script>
 
